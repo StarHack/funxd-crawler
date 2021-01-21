@@ -1,12 +1,12 @@
 package utils
 
 import (
-	"os"
+    "os"
     "encoding/csv"
 )
 
 type CsvUtils struct {
-	
+    
 }
 
 func NewCsvUtils() *CsvUtils {
@@ -15,24 +15,24 @@ func NewCsvUtils() *CsvUtils {
 }
 
 func (instance *CsvUtils) WriteFile(fileName string, line map[string]string) {
-	file, err := os.Create("result.csv")
-	
-	if err != nil {
-		panic("Failed to open new csv file for writing")
-	}
+    file, err := os.Create("result.csv")
+    
+    if err != nil {
+        panic("Failed to open new csv file for writing")
+    }
 
     defer file.Close()
 
     writer := csv.NewWriter(file)
-	defer writer.Flush()
+    defer writer.Flush()
 
-	for k,v := range(line) {
-		err := writer.Write([]string{k, v})
+    for k,v := range(line) {
+        err := writer.Write([]string{k, v})
 
-		if err != nil {
-			panic("Failed to write line to CSV ")
-		}
-	}
+        if err != nil {
+            panic("Failed to write line to CSV ")
+        }
+    }
 
-	writer.Flush()
+    writer.Flush()
 }

@@ -1,10 +1,10 @@
 package main
 
 import (
-	"fmt"
-	"strconv"
+    "fmt"
+    "strconv"
 
-	"./utils"
+    "./utils"
 )
 
 var csvUtils = utils.NewCsvUtils()
@@ -13,51 +13,51 @@ var releaseUtils = utils.NewReleaseUtils()
 var stringUtils = utils.NewStringUtils()
 
 func main() {
-	pageCount := extractPageCount()
-	
-	allReleases := make(map[string]string)
-	for i:= 1; i <= pageCount; i++ {
-		fmt.Printf("Processing page %d of %d\n", i, pageCount)
-		releases := extractReleases(i)
+    pageCount := extractPageCount()
+    
+    allReleases := make(map[string]string)
+    for i:= 1; i <= pageCount; i++ {
+        fmt.Printf("Processing page %d of %d\n", i, pageCount)
+        releases := extractReleases(i)
 
-		for k, v := range releases {
-			allReleases[k] = v
-		}
-	}
+        for k, v := range releases {
+            allReleases[k] = v
+        }
+    }
 
-	csvUtils.WriteFile("results.csv", allReleases)
+    csvUtils.WriteFile("results.csv", allReleases)
 
-	fmt.Println("Done")
+    fmt.Println("Done")
 }
 
 func extractPageCount() int {
-	html, httpError := httpUtils.Get("https://funxd.site")
+    html, httpError := httpUtils.Get("https://funxd.site")
 
-	if httpError != nil {
-		panic("Failed to fetch web page for page count extraction")
-	}
+    if httpError != nil {
+        panic("Failed to fetch web page for page count extraction")
+    }
 
-	pageCount := stringUtils.SubstringAfter(html, "class=\"page-numbers\"")
-	pageCount = stringUtils.SubstringBefore(pageCount, "</a>")
-	pageCount = stringUtils.SubstringAfter(pageCount, "</span>")
+    pageCount := stringUtils.SubstringAfter(html, "class=\"page-numbers\"")
+    pageCount = stringUtils.SubstringBefore(pageCount, "</a>")
+    pageCount = stringUtils.SubstringAfter(pageCount, "</span>")
 
-	ret, conversionError := strconv.Atoi(pageCount)
+    ret, conversionError := strconv.Atoi(pageCount)
 
-	if conversionError != nil {
-		panic("Failed to extract page count")
-	}
+    if conversionError != nil {
+        panic("Failed to extract page count")
+    }
 
-	return ret
+    return ret
 }
 
 func extractReleases(pageCount int) map[string]string {
-	link := "https://funxd.site/page/" + strconv.Itoa(pageCount) + "/"
-	html, httpError := httpUtils.Get(link)
+    link := "https://funxd.site/page/" + strconv.Itoa(pageCount) + "/"
+    html, httpError := httpUtils.Get(link)
 
-	if httpError != nil {
-		panic("Failed to fetch web page for release extraction from " + link)
-	}
+    if httpError != nil {
+        panic("Failed to fetch web page for release extraction from " + link)
+    }
 
-	html = stringUtils.ReplaceAll(html, "\n", "")
-	return releaseUtils.ExtractAllReleases(html)
+    html = stringUtils.ReplaceAll(html, "\n", "")
+    return releaseUtils.ExtractAllReleases(html)
 }

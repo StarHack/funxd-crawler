@@ -1,8 +1,8 @@
 package utils
 
 import (
-	"io/ioutil"
-	"net/http"
+    "io/ioutil"
+    "net/http"
     "time"
 )
 
@@ -11,7 +11,7 @@ type HttpUtils struct {
 }
 
 var netClient = &http.Client{
-	Timeout: time.Second * 10,
+    Timeout: time.Second * 10,
 }
 
 func NewHttpUtils() *HttpUtils {
@@ -21,17 +21,17 @@ func NewHttpUtils() *HttpUtils {
 
 func (instance *HttpUtils) Get(url string) (string, error) {
     req, err := http.NewRequest("GET", url, nil)
-	resp, err := netClient.Do(req)
+    resp, err := netClient.Do(req)
 
-	if err != nil {
-		return "", err
-	}
-	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
+    if err != nil {
+        return "", err
+    }
+    defer resp.Body.Close()
+    body, err := ioutil.ReadAll(resp.Body)
 
-	if err != nil {
-		return "", err
-	}
+    if err != nil {
+        return "", err
+    }
 
-	return string(body), nil
+    return string(body), nil
 }
